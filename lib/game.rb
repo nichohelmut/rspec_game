@@ -4,13 +4,13 @@ class Game
   def ask_for_player
     puts "Who do should start?"
     puts "1. human"
-    puts "2. human2"
+    # puts "2. human2"
     puts "3. computer"
     while true
       print "choice: "
       answer = gets.chomp
       return "human" if answer == "1"
-      return "human2" if answer == "2"
+      # return "human2" if answer == "2"
       return "computer" if answer == "3"
     end
   end
@@ -35,15 +35,15 @@ class Game
     end
     end
 
-  def symbol_y
-    while true
-      puts "Please choose a Symbol for the the second player."
-      puts "Only one letter is allowed"
-      puts "choice: "
-      answer = gets.chomp
-      return answer if answer =~ /[a-z]/
-    end
-    end
+  # def symbol_y
+  #   while true
+  #     puts "Please choose a Symbol for the the second player."
+  #     puts "Only one letter is allowed"
+  #     puts "choice: "
+  #     answer = gets.chomp
+  #     return answer if answer =~ /[a-z]/
+  #   end
+  #   end
 
   def symbol_o
     while true
@@ -69,10 +69,10 @@ class Game
 
   def play_game
     @player = ask_for_player
-    position = Position.new(dim: dim, symbol_x: symbol_x, symbol_o: symbol_o, symbol_y: symbol_y)
+    position = Position.new(dim: dim, symbol_x: symbol_x, symbol_o: symbol_o)
     until position.end?
       puts position
-      index = @player == "human" || "human2"? ask_for_move(position) : position.best_move
+      index = @player == "human" ? ask_for_move(position) : position.best_move
       position.move(index)
       @player = other_player
     end

@@ -1,9 +1,9 @@
 #!/usr/bin/env ruby
 require 'pry'
 class Position
-  attr_accessor :board, :turn, :dim, :symbol_x, :symbol_o, :symbol_y
+  attr_accessor :board, :turn, :dim, :symbol_x, :symbol_o
 
-  def initialize(board: board=nil, dim:  dim, symbol_o: symbol_o, symbol_x: symbol_x, symbol_y: symbol_y, turn: turn=symbol_x)
+  def initialize(board: board=nil, dim:  dim, symbol_o: symbol_o, symbol_x: symbol_x, turn: turn=symbol_x)
     @dim = dim
     @size = @dim * @dim
     @board = Array.new(@size, "-")
@@ -11,11 +11,10 @@ class Position
     @movelist = []
     @symbol_x = symbol_x
     @symbol_o = symbol_o
-    @symbol_y = symbol_y
   end
 
   def other_turn
-    @turn == @symbol_x || @symbol_y ? @symbol_o : @symbol_x
+    @turn == @symbol_x ? @symbol_o : @symbol_x
   end
 
   def move index
@@ -59,14 +58,12 @@ class Position
   def tie?
     win_lines.all? do |line|
       line.any? { |line_piece| line_piece.include? @symbol_x} &&
-      line.any? { |line_piece| line_piece.include? @symbol_y} &&
       line.any? { |line_piece| line_piece.include? @symbol_o}
     end
   end
 
   def evaluate_leaf
     return 100 if win?(@symbol_x)
-    return 50 if win?(@symbol_y)
     return -100 if win?(@symbol_o)
     0 if tie?
   end
@@ -78,7 +75,7 @@ class Position
     possible_moves.map do |index|
       # minimax(index).send(@turn == @symbol_x || @symbol_y ? :- : :+, @movelist.count + 1)
       index
-    end.send(@turn == @symbol_x || @symbol_y ? :max : :min)
+    end.send(@turn == @symbol_x ? :max : :min)
     ensure unmove if index
   end
 
@@ -87,7 +84,7 @@ class Position
   end
 
     def end?
-    win?(@symbol_x) || win?(@symbol_o)|| win?(@symbol_y) || @board.count("-") == 0
+    win?(@symbol_x) || win?(@symbol_o) || @board.count("-") == 0
   end
 
   def to_s
