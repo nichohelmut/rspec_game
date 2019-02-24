@@ -1,7 +1,8 @@
 require "./lib/ttt.rb"
+require "./lib/player.rb"
 
 class Game
-  def ask_for_player
+  def who_plays_first
     puts "Who do should start?"
     puts "1. human"
     puts "2. computer"
@@ -25,12 +26,22 @@ class Game
 
   def symbol_x
     while true
-      puts "Please choose a one letter as Symbol you would like to play with."
+      puts "Please choose one letter as Symbol you would like to play with."
       puts "choice: "
       answer = gets.chomp
       return answer if answer =~ /[A-Za-z]/ && answer.length == 1
     end
   end
+  #
+  # def symbol_y
+  #   while true
+  #     puts "Please choose one letter as Symbol you player two should play with."
+  #     puts "choice: "
+  #     answer = gets.chomp
+  #     return answer if answer =~ /[A-Za-z]/ && answer.length == 1
+  #   end
+  #   "human2"
+  # end
 
   def symbol_o
     while true
@@ -55,7 +66,12 @@ class Game
   end
 
   def play_game
-    @player = ask_for_player
+    @player = who_plays_first
+    if @player == "human"
+      @human = Player.new("human", symbol_x)
+      @computer = Player.new("computer", symbol_o)
+    end
+    #HIER WEITERMACHEN WIE PLAYER INSTANCEN WEITERLEITEN
     position = Position.new(dim: dim, symbol_x: symbol_x, symbol_o: symbol_o)
     until position.end?
       puts position

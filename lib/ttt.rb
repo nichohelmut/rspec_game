@@ -1,7 +1,7 @@
 require 'pry'
 
 class Position
-  attr_accessor :board, :turn, :dim, :symbol_x, :symbol_o
+  attr_accessor :board, :turn, :dim, :symbol_x, :symbol_o, :symbol_y
 
   def initialize(board: board=nil, dim:  dim, symbol_o: symbol_o, symbol_x: symbol_x, turn: turn=symbol_x)
     @dim = dim
@@ -10,6 +10,7 @@ class Position
     @turn = turn
     @movelist = []
     @symbol_x = symbol_x
+    # @symbol_y = symbol_y
     @symbol_o = symbol_o
   end
 
@@ -33,25 +34,18 @@ class Position
       (0..@size - 1).each_slice(@dim).to_a.transpose +
       [(0..@size - 1).step(@dim.next).to_a] +
       [ (@dim - 1..(@size-@dim)).step(@dim - 1).to_a ]
-    ).map do |line|
-      line.map do |index|
-         @board[index]
-
-      end
-    end
+    ).map {|line| line.map {|index| @board[index]}
+    }
   end
 
   def win? piece
-    win_lines.any? do |line|
-      line.all? do |line_piece|
-        line_piece.include? piece
-      end
-    end
+    win_lines.any? {|line| line.all? {|line_piece| line_piece.include? piece}}
   end
 
   def tie?
     win_lines.all? do |line|
       line.any? { |line_piece| line_piece.include? @symbol_x} &&
+      # line.any? { |line_piece| line_piece.include? @symbol_y} &&
       line.any? { |line_piece| line_piece.include? @symbol_o}
     end
   end
