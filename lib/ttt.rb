@@ -1,12 +1,12 @@
-#!/usr/bin/env ruby
 require 'pry'
+
 class Position
   attr_accessor :board, :turn, :dim, :symbol_x, :symbol_o
 
   def initialize(board: board=nil, dim:  dim, symbol_o: symbol_o, symbol_x: symbol_x, turn: turn=symbol_x)
     @dim = dim
     @size = @dim * @dim
-    @board = Array.new(@size, "-")
+    @board = board || Array.new(@size, "-")
     @turn = turn
     @movelist = []
     @symbol_x = symbol_x
@@ -21,12 +21,6 @@ class Position
     @board[index] = @turn
     @turn = other_turn
     @movelist << index
-  end
-
-  def unmove
-    @board[@movelist.pop] = "-"
-    @turn = other_turn
-    self
   end
 
   def possible_moves
@@ -62,25 +56,8 @@ class Position
     end
   end
 
-  def evaluate_leaf
-    return 100 if win?(@symbol_x)
-    return -100 if win?(@symbol_o)
-    0 if tie?
-  end
-
-  def minimax(index = nil)
-    move(index) if index
-    leaf_value = evaluate_leaf
-    return leaf_value if leaf_value
-    possible_moves.map do |index|
-      # minimax(index).send(@turn == @symbol_x || @symbol_y ? :- : :+, @movelist.count + 1)
-      index
-    end.send(@turn == @symbol_x ? :max : :min)
-    ensure unmove if index
-  end
-
   def best_move
-    possible_moves.send(@turn == @symbol_x || @symbol_y ? :max_by : :min_by) {|idx| minimax(idx)}
+    possible_moves.sample
   end
 
     def end?
