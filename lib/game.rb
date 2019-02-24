@@ -4,46 +4,33 @@ class Game
   def ask_for_player
     puts "Who do should start?"
     puts "1. human"
-    # puts "2. human2"
-    puts "3. computer"
+    puts "2. computer"
     while true
       print "choice: "
       answer = gets.chomp
       return "human" if answer == "1"
-      # return "human2" if answer == "2"
-      return "computer" if answer == "3"
+      return "computer" if answer == "2"
     end
   end
 
   def dim
     while true
-      puts "How many fields should each row and size have?"
+      puts "How many fields should each row and column have?"
       puts "choose between 3 and 10"
       print "choice: "
       answer = gets.chomp
-      return answer.to_i if (0..10).include? answer.to_i
+      return answer.to_i if (3..10).include? answer.to_i
     end
   end
 
   def symbol_x
     while true
-      puts "Please choose a Symbol you would like to play with."
-      puts "Only one letter is allowed"
+      puts "Please choose a one letter as Symbol you would like to play with."
       puts "choice: "
       answer = gets.chomp
-      return answer if answer =~ /[a-z]/
+      return answer if answer =~ /[A-Za-z]/ && answer.length == 1
     end
-    end
-
-  # def symbol_y
-  #   while true
-  #     puts "Please choose a Symbol for the the second player."
-  #     puts "Only one letter is allowed"
-  #     puts "choice: "
-  #     answer = gets.chomp
-  #     return answer if answer =~ /[a-z]/
-  #   end
-  #   end
+  end
 
   def symbol_o
     while true
@@ -51,7 +38,7 @@ class Game
       puts "Only one letter is allowed"
       puts "choice: "
       answer = gets.chomp
-      return answer if answer =~ /[a-z]/
+      return answer if answer =~ /[A-Za-z]/ && answer.length == 1
     end
   end
 
