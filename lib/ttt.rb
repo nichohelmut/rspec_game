@@ -1,21 +1,29 @@
 require 'pry'
 
 class Position
-  attr_accessor :board, :turn, :dim, :symbol_x, :symbol_o, :symbol_y
+  attr_accessor :board, :dim, :symbol_x, :symbol_y, :symbol_o, :turn
 
-  def initialize(board: board=nil, dim:  dim, symbol_o: symbol_o, symbol_x: symbol_x, turn: turn=symbol_x)
+  def initialize(
+      board=nil, dim, symbol_x, symbol_y, symbol_o, turn
+  )
     @dim = dim
     @size = @dim * @dim
     @board = board || Array.new(@size, "-")
     @turn = turn
     @movelist = []
     @symbol_x = symbol_x
-    # @symbol_y = symbol_y
+    @symbol_y = symbol_y
     @symbol_o = symbol_o
   end
 
   def other_turn
-    @turn == @symbol_x ? @symbol_o : @symbol_x
+    if @turn == @symbol_x
+      @symbol_y
+    elsif @turn == @symbol_y
+      @symbol_o
+    elsif  @symbol_o
+      @symbol_x
+    end
   end
 
   def move index
@@ -45,7 +53,7 @@ class Position
   def tie?
     win_lines.all? do |line|
       line.any? { |line_piece| line_piece.include? @symbol_x} &&
-      # line.any? { |line_piece| line_piece.include? @symbol_y} &&
+      line.any? { |line_piece| line_piece.include? @symbol_y} &&
       line.any? { |line_piece| line_piece.include? @symbol_o}
     end
   end
@@ -55,7 +63,7 @@ class Position
   end
 
     def end?
-    win?(@symbol_x) || win?(@symbol_o) || @board.count("-") == 0
+    win?(@symbol_x) || win?(@symbol_y) || win?(@symbol_o) || @board.count("-") == 0
   end
 
   def to_s
