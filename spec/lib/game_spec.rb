@@ -4,20 +4,14 @@ require 'pry'
 
 describe Game do
 
-  let(:game) {Game.new}
-  let(:position) {Position.new(3, "a", "b", "c", "a")}
+  let(:game) { Game.new }
+  let(:position) { Position.new(3, "a", "b", "c", "a") }
+  let(:human) { Player.new("a", "human") }
 
-  context "#who_plays_first" do
-    it "should ask who should play first" do
-      game.stub(gets: "1\n")
-      expect(game.who_plays_first).to eq "human"
-    end
-  end
-
-  context "#ask_for_move" do
-    it "should ask for a valid move" do
-      game.stub(gets: "1\n")
-      expect(game.ask_for_move(position)).to eq 1
+  context "#player_instance_var" do
+    it "@computer with symbol_o and 'human' type" do
+      expect(human.symbol).to eq "a"
+      expect(human.type).to eq "human"
     end
   end
 
@@ -45,11 +39,4 @@ describe Game do
     end
   end
 
-  context "#player_instance_var" do
-    it "@computer with symbol_o and 'computer' type" do
-      human = Player.new("c", "computer")
-      expect(human.symbol).to eq "c"
-      expect(human.type).to eq "computer"
-    end
-  end
 end
