@@ -14,7 +14,7 @@ describe Position do
   let(:position_3) { Position.new(dim_3, symbol_x, symbol_y, symbol_o, turn) }
 
   context "#new" do
-    it "should inititalize a new board" do
+    it "should initialize a new board" do
       expect(position.board).to eq(%w(-) * 16)
       expect(position.turn).to eq symbol_x
     end
@@ -79,7 +79,7 @@ describe Position do
     end
     it "should determine a win for B" do
       expect(Position.new(
-          %w(A A - - - - B B B), 3, "a", "b", "c", "b"
+          %w(A A C C - - B B B), 3, "a", "b", "c", "b"
       ).win?(symbol_y)).to eq true
     end
   end
@@ -106,16 +106,22 @@ describe Position do
     it "should see a position has not ended" do
       expect(position.end?).to eq false
     end
-    it "should see a position has ended due to win for x" do
-      position_3.board = %w(- - A - - A B B A)
+    it "should see a position has ended due to win for A" do
+      position_3.board = %w(C C A
+                            C - A
+                            B B A)
       expect(position_3.end?).to eq true
     end
-    it "should see a position has ended due to win for o" do
-      position_3.board = %w(- - A - - A B B B)
+    it "should see a position has ended due to win for B" do
+      position_3.board = %w(C C A
+                            C - A
+                            B B B)
       expect(position_3.end?).to eq true
     end
     it "should see a position has ended due tie" do
-      position_3.board = %w(A B A A B A B A B)
+      position_3.board = %w(A B C
+                            A C B
+                            B A C)
       expect(position_3.end?).to eq true
     end
   end

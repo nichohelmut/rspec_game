@@ -17,13 +17,9 @@ class Position
   end
 
   def other_turn
-    if @turn == @symbol_x
-      @symbol_y
-    elsif @turn == @symbol_y
-      @symbol_o
-    elsif  @symbol_o
-      @symbol_x
-    end
+    return @symbol_y if @turn == @symbol_x
+    return @symbol_o if @turn == @symbol_y
+    @symbol_x
   end
 
   def move index
@@ -46,8 +42,8 @@ class Position
     }
   end
 
-  def win? piece
-    win_lines.any? {|line| line.all? {|line_piece| line_piece.include? piece}}
+  def win? symbol
+    win_lines.any? {|line| line.all? {|line_symbol| line_symbol.include? symbol}}
   end
 
   def tie?
@@ -68,9 +64,10 @@ class Position
 
   def to_s
     table_extend = @dim > 3 ? ("-" * @dim) * 2 : ""
+    large_table = @dim > 7 ? ("-" * @dim) : ""
     @board.each_slice(@dim).map do |line|
       " " + line.map do |piece|
         piece == "-" ? " " : piece end.join(" | ") + " "
-    end.join("\n-----------#{table_extend}\n") + "\n"
+    end.join("\n-----------#{table_extend}#{large_table}\n") + "\n"
   end
 end

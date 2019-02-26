@@ -11,7 +11,7 @@ class Game
 
   def who_plays_first
     player_instance_var
-    puts "Who do should start?"
+    puts "Who should start?"
     puts "1. #{@human.type}"
     puts "2. #{@human2.type}"
     puts "3. #{@computer.type}"
@@ -34,12 +34,16 @@ class Game
     end
   end
 
+  def answer_validation(answer)
+    answer =~ /[A-Za-z]/ && answer.length == 1
+  end
+
   def symbol_x
     while true
       puts "Please choose one letter for Player 1"
       puts "choice: "
       answer = gets.chomp
-      return answer if answer =~ /[A-Za-z]/ && answer.length == 1
+      return answer if answer_validation(answer)
     end
   end
 
@@ -48,7 +52,7 @@ class Game
       puts "Please choose one letter for Player 2"
       puts "choice: "
       answer = gets.chomp
-      return answer if answer =~ /[A-Za-z]/ && answer.length == 1
+      return answer if answer_validation(answer) && answer != @human.symbol
     end
   end
 
@@ -58,7 +62,7 @@ class Game
       puts "Only one letter is allowed"
       puts "choice: "
       answer = gets.chomp
-      return answer if answer =~ /[A-Za-z]/ && answer.length == 1
+      return answer if answer_validation(answer) && answer != @human.symbol && answer != @human2.symbol
     end
   end
 
@@ -71,23 +75,15 @@ class Game
   end
 
   def other_player
-    if @player.type == "human"
-      @human2
-    elsif @player.type == "human2"
-      @computer
-    elsif @player.type == "computer"
-      @human
-    end
+   return @human2 if @player.type == "human"
+   return @computer if @player.type == "human2"
+   @human
   end
 
   def player_index(position)
-    if @player.type == "human"
-      ask_for_move(position)
-    elsif @player.type == "human2"
-      ask_for_move(position)
-    elsif @player.type == "computer"
-      position.best_move
-    end
+    return ask_for_move(position) if @player.type == "human"
+    return ask_for_move(position) if @player.type == "human2"
+    position.best_move
   end
 
   def winner(position)
@@ -96,12 +92,17 @@ class Game
     "computer" if position.turn == @human.symbol
   end
 
+  def table_extend(position)
+    table_extend = position.dim > 3 ? ("O" * position.dim) * 2 : ""
+    large_table = position.dim > 7 ? ("O" * position.dim) : ""
+    puts "OOOOOOOOOOO#{table_extend}#{large_table}"
+  end
+
   def play_game
     @player = who_plays_first
     position = Position.new(dim, @human.symbol, @human2.symbol , @computer.symbol, @player.symbol)
     until position.end?
-      table_extend = position.dim > 3 ? ("O" * position.dim) * 2 : ""
-      puts "OOOOOOOOOOO#{table_extend}"
+      table_extend(position)
       puts position
       index = player_index(position)
       position.move(index)

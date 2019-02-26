@@ -9,7 +9,7 @@ describe Game do
   let(:human) { Player.new("a", "human") }
 
   context "#player_instance_var" do
-    it "@computer with symbol_o and 'human' type" do
+    it "should return symbol_o and type from @human" do
       expect(human.symbol).to eq "a"
       expect(human.type).to eq "human"
     end
@@ -22,21 +22,18 @@ describe Game do
     end
   end
 
-  context "symbols methos" do
-    it "#symbol_x should ask for symbol for player 1" do
+  context "#symbols_x" do
+    it "should ask for symbol for player 1" do
       game.stub(gets: "A")
       expect(game.symbol_x).to eq "A"
     end
-
-    it "#symbol_y should ask for symbol for player 2" do
-      game.stub(gets: "B")
-      expect(game.symbol_y).to eq "B"
-    end
-
-    it "#symbol_o should ask for symbol for computer" do
-      game.stub(gets: "C")
-      expect(game.symbol_o).to eq "C"
-    end
   end
 
+  context "#answer_validation"
+    it "should validate the user input to be one letter" do
+      expect(game.answer_validation("B")).to eq true
+      expect(game.answer_validation("b")).to eq true
+      expect(game.answer_validation("1")).to eq nil
+      expect(game.answer_validation("%")).to eq nil
+    end
 end
