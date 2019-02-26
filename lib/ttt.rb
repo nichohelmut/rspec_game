@@ -52,9 +52,9 @@ class Position
 
   def tie?
     win_lines.all? do |line|
-      line.any? { |line_piece| line_piece.include? @symbol_x} &&
-      line.any? { |line_piece| line_piece.include? @symbol_y} &&
-      line.any? { |line_piece| line_piece.include? @symbol_o}
+      (line - Array.new(@dim, @symbol_x)).any? &&
+      (line - Array.new(@dim, @symbol_y)).any? &&
+      (line - Array.new(@dim, @symbol_o)).any?
     end
   end
 

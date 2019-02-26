@@ -74,7 +74,7 @@ describe Position do
       expect(position.win?(symbol_x)).to eq false
     end
     it "should determine a win for A" do
-      position.board = %w(A A A A - - - - - - - - B - B B)
+      position.board = %w(A A A A C A C C B C B - B - B B)
       expect(position.win?(symbol_x)).to eq true
     end
     it "should determine a win for B" do
@@ -85,12 +85,19 @@ describe Position do
   end
 
   context "#tie?" do
-    it "should determine not tied" do
-      expect(position.tie?).to eq false
+    it "should determine tied" do
+      position.board = %w(C C C A
+                          B A B A
+                          A C B B
+                          B B B A)
+      expect(position.tie?).to eq true
     end
 
     it "should determine not tied" do
-      position.board = %w(A B A A B A B A A B A B B A B A)
+      position.board = %w(C C C C
+                          B A B A
+                          A A B B
+                          B B B A)
       expect(position.tie?).to eq false
     end
   end

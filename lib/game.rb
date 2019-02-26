@@ -2,17 +2,25 @@ require "./lib/ttt.rb"
 require "./lib/player.rb"
 
 class Game
+
+  def player_instance_var
+    @human = Player.new(symbol_x, "human", )
+    @human2 = Player.new(symbol_y, "human2")
+    @computer = Player.new(symbol_o, "computer", )
+  end
+
   def who_plays_first
+    player_instance_var
     puts "Who do should start?"
-    puts "1. human"
-    puts "2. human2"
-    puts "3. computer"
+    puts "1. #{@human.type}"
+    puts "2. #{@human2.type}"
+    puts "3. #{@computer.type}"
     while true
       print "choice: "
       answer = gets.chomp
-      return "human" if answer == "1"
-      return "human2" if answer == "2"
-      return "computer" if answer == "3"
+      return @human if answer == "1"
+      return @human2 if answer == "2"
+      return @computer if answer == "3"
     end
   end
 
@@ -56,53 +64,44 @@ class Game
 
   def ask_for_move position
     while true
-      print "#{player_turn}'s move: "
+      print "#{@player.type}'s move: "
       answer = gets.chomp
       return answer.to_i if answer =~ /^\d+$/ && position.board[answer.to_i] == "-"
     end
   end
 
   def other_player
-    if @player == "human"
-      "human2"
-    elsif @player == "human2"
-      "computer"
-    elsif @player == "computer"
-      "human"
+    if @player.type == "human"
+      @human2
+    elsif @player.type == "human2"
+      @computer
+    elsif @player.type == "computer"
+      @human
     end
   end
 
   def player_index(position)
-    if @player == "human"
+    if @player.type == "human"
       ask_for_move(position)
-    elsif @player == "human2"
+    elsif @player.type == "human2"
       ask_for_move(position)
-    elsif @player == "computer"
+    elsif @player.type == "computer"
       position.best_move
     end
   end
 
-  def player_turn
-    if @player == "human"
-      @human.symbol
-    elsif @player == "human2"
-      @human2.symbol
-    elsif @player == "computer"
-      @computer.symbol
-    end
-  end
-
-  def player_instance_var
-    @human = Player.new(symbol_x, "human", )
-    @human2 = Player.new(symbol_y, "human2")
-    @computer = Player.new(symbol_o, "computer", )
+  def winner(position)
+    return "human" if position.turn == @human2.symbol
+    return "human2" if position.turn == @computer.symbol
+    "computer" if position.turn == @human.symbol
   end
 
   def play_game
     @player = who_plays_first
-    player_instance_var
-    position = Position.new(dim, @human.symbol, @human2.symbol , @computer.symbol, player_turn)
+    position = Position.new(dim, @human.symbol, @human2.symbol , @computer.symbol, @player.symbol)
     until position.end?
+      table_extend = position.dim > 3 ? ("O" * position.dim) * 2 : ""
+      puts "OOOOOOOOOOO#{table_extend}"
       puts position
       index = player_index(position)
       position.move(index)
@@ -112,7 +111,7 @@ class Game
     if position.tie?
       puts "draw"
     else
-      puts "winner: #{other_player}"
+      puts "winner: #{winner(position)}"
     end
   end
 end
